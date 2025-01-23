@@ -33,11 +33,11 @@ Este é um projeto simples de encurtamento de URL utilizando **Spring Boot** e *
    cd NanoURL
    ```
 
-3. Configure o MongoDB no arquivo `src/main/resources/application.properties`:
+3. Configure o MongoDB no arquivo `src/main/resources/application-dev.properties`:
    ```properties
    spring.data.mongodb.host=localhost
    spring.data.mongodb.port=27017
-   spring.data.mongodb.database=nano_urls
+   spring.data.mongodb.database=nano_url
    ```
 
 4. Execute o projeto:
@@ -48,7 +48,7 @@ Este é um projeto simples de encurtamento de URL utilizando **Spring Boot** e *
 5. Acesse a aplicação:
    - **POST** para encurtar uma URL:
      ```
-     http://localhost:8080/api/urls/shorten
+     http://localhost:8080/api/url/shorten
      ```
      Corpo da requisição (JSON):
      ```json
@@ -59,7 +59,7 @@ Este é um projeto simples de encurtamento de URL utilizando **Spring Boot** e *
 
    - **GET** para redirecionar para a URL original:
      ```
-     http://localhost:8080/api/urls/{shortCode}
+     http://localhost:8080/api/url/{shortCode}
      ```
 
 ### Testes Automatizados
