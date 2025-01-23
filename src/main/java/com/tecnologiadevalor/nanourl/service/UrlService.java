@@ -31,7 +31,7 @@ public class UrlService {
         String shortCode = generateShortCode();
         url.setOriginalUrl(originalUrl);
         url.setShortCode(shortCode);
-        url.setShortUrl(baseUrl + contextPath + "/url/" +shortCode);
+        url.setShortUrl(buildShortUrl(shortCode));
         url.setExpiresAt(LocalDateTime.now().plusDays(30));
         url.setCreatedAt(LocalDateTime.now());
         url.setUpdatedAt(LocalDateTime.now());
@@ -68,6 +68,21 @@ public class UrlService {
         Optional<Url> url = urlRepository.findByShortCode(shortCode);
         if(url.isEmpty()) throw new NotFoundException(notFoundMessage);
         this.urlRepository.deleteByShortCode(shortCode);
+    }
+
+    public Url updateUrlByShortCode(Url newUrl, String shortCode) {
+        Optional<Url> url = urlRepository.findByShortCode(shortCode);
+        if(url.isEmpty()) throw new NotFoundException(notFoundMessage);
+        url.get().setOriginalUrl(newUrl.getOriginalUrl());
+        url.get().setShortCode(newUrl.getShortCode());
+        url.get().setShortUrl(buildShortUrl(newUrl.getShortCode()));
+        url.get().setUpdatedAt(LocalDateTime.now());
+        url.get().setExpiresAt(LocalDateTime.now().plusDays(30));
+        return urlRepository.save(url.get());
+    }
+
+    private String buildShortUrl(String shortCode) {
+        return baseUrl + contextPath + "/url/" + shortCode;
     }
 
 }

@@ -3,6 +3,7 @@ package com.tecnologiadevalor.nanourl.controller;
 import com.tecnologiadevalor.nanourl.model.Url;
 import com.tecnologiadevalor.nanourl.service.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +34,14 @@ public class UrlController {
         return ResponseEntity.ok(urls);
     }
 
-    @DeleteMapping("{shortUrl}")
-    public void deleteUrlByShortUrl(@PathVariable String shortUrl) {
-        this.urlService.deleteUrlByShortCode(shortUrl);
+    @DeleteMapping("{shortCode}")
+    public ResponseEntity<Void> deleteUrlByShortCode(@PathVariable String shortCode) {
+        this.urlService.deleteUrlByShortCode(shortCode);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("{shortCode}")
+    public ResponseEntity<Url> updateUrlByShortCode(@PathVariable String shortCode, @RequestBody Url newUrl) {
+        return ResponseEntity.ok(urlService.updateUrlByShortCode(newUrl, shortCode));
     }
 }
