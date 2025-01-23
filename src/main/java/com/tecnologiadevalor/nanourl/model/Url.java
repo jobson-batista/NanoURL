@@ -1,11 +1,12 @@
 package com.tecnologiadevalor.nanourl.model;
 
 import com.tecnologiadevalor.nanourl.entity.BaseEntity;
-import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.data.mongodb.core.annotation.Collation;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -16,9 +17,9 @@ public class Url extends BaseEntity {
     private String id;
 
     private String originalUrl;
+    private String shortCode;
     private String shortUrl;
-    private String expiresAt;
+    private LocalDateTime expiresAt;
     private int accessCount;
-
 
 }
