@@ -23,7 +23,7 @@ public class UrlService {
         String shortCode = generateShortCode();
         url.setOriginalUrl(originalUrl);
         url.setShortCode(shortCode);
-        url.setShortUrl(baseUrl + "/" + shortCode);
+        url.setShortUrl(baseUrl + "/api/urls/" + shortCode);
         url.setExpiresAt(LocalDateTime.now().plusDays(30));
         url.setCreatedAt(LocalDateTime.now());
         url.setUpdatedAt(LocalDateTime.now());
@@ -32,7 +32,7 @@ public class UrlService {
     }
 
     public Url getOriginalUrl(String ShortUrl) {
-        return urlRepository.findById(ShortUrl).orElse(null);
+        return urlRepository.findByShortCode(ShortUrl).orElse(null);
     }
 
     public String generateShortCode() {

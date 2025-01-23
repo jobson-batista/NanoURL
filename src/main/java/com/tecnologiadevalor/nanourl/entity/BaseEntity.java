@@ -13,12 +13,4 @@ public abstract class BaseEntity {
 
     private LocalDateTime updatedAt;
 
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }
