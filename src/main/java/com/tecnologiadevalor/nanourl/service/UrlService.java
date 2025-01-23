@@ -1,5 +1,6 @@
 package com.tecnologiadevalor.nanourl.service;
 
+import com.tecnologiadevalor.nanourl.exception.NotFoundException;
 import com.tecnologiadevalor.nanourl.model.Url;
 import com.tecnologiadevalor.nanourl.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -18,12 +20,15 @@ public class UrlService {
     @Value("${app.base-url}")
     private String baseUrl;
 
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
+
     public Url createShortUrl(String originalUrl) {
         Url url = new Url();
         String shortCode = generateShortCode();
         url.setOriginalUrl(originalUrl);
         url.setShortCode(shortCode);
-        url.setShortUrl(baseUrl + "/api/urls/" + shortCode);
+        url.setShortUrl(baseUrl + contextPath + "/" +shortCode);
         url.setExpiresAt(LocalDateTime.now().plusDays(30));
         url.setCreatedAt(LocalDateTime.now());
         url.setUpdatedAt(LocalDateTime.now());
@@ -31,8 +36,14 @@ public class UrlService {
         return urlRepository.save(url);
     }
 
-    public Url getOriginalUrl(String ShortUrl) {
-        return urlRepository.findByShortCode(ShortUrl).orElse(null);
+    public Url getOriginalUrl(String ShortUrl) throws NotFoundException {
+        Url url = urlRepository.findByShortCode(ShortUrl).orElse(null);
+        if(url != null) {
+            url.incrementAccessCount();
+        } else {
+            throw new NotFoundException("Check the Short Code.");
+        }
+        return urlRepository.save(url);
     }
 
     public String generateShortCode() {
@@ -44,6 +55,10 @@ public class UrlService {
             shortCode.append(characters.charAt(random.nextInt(characters.length())));
         }
         return shortCode.toString();
+    }
+
+    public List<Url> getAllUrls() {
+        return urlRepository.findAll();
     }
 
 }

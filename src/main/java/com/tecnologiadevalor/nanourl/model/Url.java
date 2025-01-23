@@ -22,4 +22,8 @@ public class Url extends BaseEntity {
     private LocalDateTime expiresAt;
     private int accessCount;
 
+    public void incrementAccessCount() {
+        this.accessCount++;
+    }
+
 }

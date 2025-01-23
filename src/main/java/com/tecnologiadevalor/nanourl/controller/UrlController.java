@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/urls")
+@RequestMapping("/url")
 public class UrlController {
 
     @Autowired
@@ -20,8 +22,14 @@ public class UrlController {
     }
 
     @GetMapping("{shortUrl}")
-    public ResponseEntity<Url> getOriginalUrl(@PathVariable String shortUrl) {
+    public ResponseEntity<Url> getOriginalUrl(@PathVariable String shortUrl) throws Exception {
         Url originalUrl = urlService.getOriginalUrl(shortUrl);
         return ResponseEntity.ok(originalUrl);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Url>> getAllOriginalUrl() {
+        List<Url> urls = urlService.getAllUrls();
+        return ResponseEntity.ok(urls);
     }
 }
