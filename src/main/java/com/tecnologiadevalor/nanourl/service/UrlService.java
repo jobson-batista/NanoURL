@@ -1,5 +1,6 @@
 package com.tecnologiadevalor.nanourl.service;
 
+import com.tecnologiadevalor.nanourl.dto.UrlDto;
 import com.tecnologiadevalor.nanourl.exception.NotFoundException;
 import com.tecnologiadevalor.nanourl.model.Url;
 import com.tecnologiadevalor.nanourl.repository.UrlRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -21,12 +23,12 @@ public class UrlService {
     @Value("${app.base-url}")
     private String baseUrl;
 
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
+//    @Value("${server.servlet.context-path}")
+//    private String contextPath;
 
     private final String notFoundMessage = "Check the Short Code.";
 
-    public Url createShortUrl(String originalUrl) {
+    public UrlDto createShortUrl(String originalUrl) {
         Url url = new Url();
         String shortCode = generateShortCode();
         url.setOriginalUrl(originalUrl);
@@ -36,17 +38,17 @@ public class UrlService {
         url.setCreatedAt(LocalDateTime.now());
         url.setUpdatedAt(LocalDateTime.now());
         url.setAccessCount(0);
-        return urlRepository.save(url);
+        return urlRepository.save(url).toDto();
     }
 
-    public Url getOriginalUrl(String ShortUrl) throws NotFoundException {
-        Url url = urlRepository.findByShortCode(ShortUrl).orElse(null);
+    public UrlDto getOriginalUrl(String ShortCode) throws NotFoundException {
+        Url url = urlRepository.findByShortCode(ShortCode).orElse(null);
         if(url != null) {
             url.incrementAccessCount();
         } else {
             throw new NotFoundException(notFoundMessage);
         }
-        return urlRepository.save(url);
+        return urlRepository.save(url).toDto();
     }
 
     public String generateShortCode() {
@@ -60,8 +62,12 @@ public class UrlService {
         return shortCode.toString();
     }
 
-    public List<Url> getAllUrls() {
-        return urlRepository.findAll();
+    public List<UrlDto> getAllUrls() {
+        List<UrlDto> dtos = new ArrayList<>();
+        for(Url url: urlRepository.findAll()) {
+            dtos.add(url.toDto());
+        }
+        return dtos;
     }
 
     public void deleteUrlByShortCode(String shortCode) {
@@ -70,7 +76,7 @@ public class UrlService {
         this.urlRepository.deleteByShortCode(shortCode);
     }
 
-    public Url updateUrlByShortCode(Url newUrl, String shortCode) {
+    public UrlDto updateUrlByShortCode(Url newUrl, String shortCode) {
         Optional<Url> url = urlRepository.findByShortCode(shortCode);
         if(url.isEmpty()) throw new NotFoundException(notFoundMessage);
         url.get().setOriginalUrl(newUrl.getOriginalUrl());
@@ -78,11 +84,19 @@ public class UrlService {
         url.get().setShortUrl(buildShortUrl(newUrl.getShortCode()));
         url.get().setUpdatedAt(LocalDateTime.now());
         url.get().setExpiresAt(LocalDateTime.now().plusDays(30));
-        return urlRepository.save(url.get());
+        return urlRepository.save(url.get()).toDto();
     }
 
     private String buildShortUrl(String shortCode) {
-        return baseUrl + contextPath + "/url/" + shortCode;
+        return baseUrl + "/" + shortCode;
+    }
+
+    public void incrementAccessCount(String shortCode) {
+        Optional<Url> url = urlRepository.findByShortCode(shortCode);
+        if(url.isPresent()) {
+            url.get().incrementAccessCount();
+            urlRepository.save(url.get());
+        }
     }
 
 }

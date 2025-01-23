@@ -44,4 +44,18 @@ public class UrlExceptionHandler {
         );
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ExpiredUrlException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<MessageError> expiredUrlException(ExpiredUrlException expiredUrlException, WebRequest request) {
+        expiredUrlException.printStackTrace();
+        MessageError message = new MessageError(
+                HttpStatus.BAD_REQUEST.value(),
+                this.baseUrl,
+                expiredUrlException.getMessage(),
+                expiredUrlException.getDescription(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
 }
