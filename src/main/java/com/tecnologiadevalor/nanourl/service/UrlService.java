@@ -79,9 +79,15 @@ public class UrlService {
     public UrlDto updateUrlByShortCode(Url newUrl, String shortCode) {
         Optional<Url> url = urlRepository.findByShortCode(shortCode);
         if(url.isEmpty()) throw new NotFoundException(notFoundMessage);
-        url.get().setOriginalUrl(newUrl.getOriginalUrl());
-        url.get().setShortCode(newUrl.getShortCode());
-        url.get().setShortUrl(buildShortUrl(newUrl.getShortCode()));
+        if(newUrl.getOriginalUrl() != null) {
+            url.get().setOriginalUrl(newUrl.getOriginalUrl());
+        }
+        if(newUrl.getShortCode() != null) {
+            url.get().setShortCode(newUrl.getShortCode());
+        }
+        if(newUrl.getShortCode() != null) {
+            url.get().setShortUrl(buildShortUrl(newUrl.getShortCode()));
+        }
         url.get().setUpdatedAt(LocalDateTime.now());
         url.get().setExpiresAt(LocalDateTime.now().plusDays(30));
         return urlRepository.save(url.get()).toDto();
