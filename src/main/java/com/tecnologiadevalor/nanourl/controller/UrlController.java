@@ -32,4 +32,9 @@ public class UrlController {
         List<Url> urls = urlService.getAllUrls();
         return ResponseEntity.ok(urls);
     }
+
+    @DeleteMapping("{shortUrl}")
+    public void deleteUrlByShortUrl(@PathVariable String shortUrl) {
+        this.urlService.deleteUrlByShortCode(shortUrl);
+    }
 }
