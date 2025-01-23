@@ -1,5 +1,6 @@
 package com.tecnologiadevalor.nanourl.model;
 
+import com.tecnologiadevalor.nanourl.dto.UrlDto;
 import com.tecnologiadevalor.nanourl.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +25,18 @@ public class Url extends BaseEntity {
 
     public void incrementAccessCount() {
         this.accessCount++;
+    }
+
+    public UrlDto toDto() {
+        UrlDto dto = new UrlDto();
+        dto.setOriginalUrl(this.originalUrl);
+        dto.setShortCode(this.shortCode);
+        dto.setShortUrl(this.shortUrl);
+        dto.setExpiresAt(this.expiresAt);
+        dto.setAccessCount(this.accessCount);
+        dto.setUpdatedAt(this.getUpdatedAt());
+        dto.setCreatedAt(this.getCreatedAt());
+        return dto;
     }
 
 }

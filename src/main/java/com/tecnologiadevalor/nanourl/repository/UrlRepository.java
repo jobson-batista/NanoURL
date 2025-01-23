@@ -7,5 +7,7 @@ import java.util.Optional;
 
 public interface UrlRepository extends MongoRepository<Url, String> {
 
-    Optional<Url> findByShortCode(String shortUrl);
+    Optional<Url> findByShortCode(String shortCode);
+
+    void deleteByShortCode(String shortCode);
 }
