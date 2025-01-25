@@ -23,9 +23,6 @@ public class UrlService {
     @Value("${app.base-url}")
     private String baseUrl;
 
-//    @Value("${server.servlet.context-path}")
-//    private String contextPath;
-
     private final String notFoundMessage = "Check the Short Code.";
 
     public UrlDto createShortUrl(String originalUrl) {
