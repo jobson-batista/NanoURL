@@ -28,7 +28,7 @@ Este é um projeto simples de encurtamento de URL utilizando **Spring Boot**, **
 
 1. Clone o repositório:
    ```bash
-   git clone git@github.com:jobson-batista/NanoURL.git
+   git clone https://github.com/jobson-batista/NanoURL.git
    ```
 
 2. Navegue até o diretório do projeto:
