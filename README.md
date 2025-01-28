@@ -1,27 +1,30 @@
-# NanoURL | Encurtador de URL
+# ⚛️ NanoURL | Encurtador de URL ⚛️
 
-Este é um projeto simples de encurtamento de URL utilizando **Spring Boot** e **MongoDB**. O objetivo é criar um serviço RESTful que recebe uma URL longa e gera um código curto, armazenando as informações no MongoDB.
+Este é um projeto simples de encurtamento de URL utilizando **Spring Boot**, **MongoDB** e um pouco de **JUnit**. O objetivo é criar um serviço RESTful que recebe uma URL longa e gera um código curto, armazenando as informações no MongoDB.
 
-## Funcionalidades
+## ✅ Funcionalidades
 
 - **Encurtar URL**: Recebe uma URL longa e retorna uma URL encurtada.
 - **Redirecionar para URL Original**: Ao acessar a URL encurtada, o serviço redireciona para a URL original.
+- **Obter estastísticas das URLs**: Obtém informação como total de URLs ativas e total de URLs expiradas, por exemplo.
 
-## Tecnologias Utilizadas
+## ✅ Tecnologias Utilizadas
 
-- **Spring Boot**
-- **MongoDB**
-- **Gradle**
+- **Spring Boot 3.4.1**: Para agilizar a criação do projeto Spring.
+- **MongoDB 8.0.4**: Banco de dados não relacional, baseado em collections e documentos.
+- **Gradle 8.11**: Gerenciador de dependências.
+- **JUnit 5**: Realizar testes automatizados.
+- **Lombok**: Para diminuir a verbosidade do código.
 
-## Como Rodar o Projeto
+## 🏃🏻‍♂️ Como Rodar o Projeto
 
 ### Pré-requisitos
 
-- Java 21
-- Gradle
-- MongoDB rodando localmente (ou em outro ambiente)
+- ☕️ Java 21 
+- 🐘 Gradle 
+- 🎲 MongoDB rodando localmente (ou em outro ambiente) 
 
-### Passos
+### ✅ Passos
 
 1. Clone o repositório:
    ```bash
@@ -62,8 +65,7 @@ Este é um projeto simples de encurtamento de URL utilizando **Spring Boot** e *
      http://localhost:8080/api/url/{shortCode}
      ```
 
-### Testes Automatizados
+## 📚 Documentação | Swagger
 
-Os testes automatizados serão adicionados em breve.
-
-
+* Para acessar a documentação basta subir o projeto e acessar o endereço abaixo:
+```http://localhost:8080/swagger-ui/index.html```
