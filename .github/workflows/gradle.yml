@@ -24,7 +24,6 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/wrapper-validation-action@v1
-        with:
 
 
       - name: Build and Test (JUnit)
