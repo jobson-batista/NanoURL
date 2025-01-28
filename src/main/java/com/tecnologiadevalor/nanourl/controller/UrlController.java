@@ -14,7 +14,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/url")
-@Tag(name = "URL Controller", description = "Module for shortening URLs and performing CRUD operations")
+@Tag(
+        name = "URL Controller",
+        description = "Controller responsible for URL shortening and management. " +
+                "Provides endpoints for generating short URLs, retrieving original URLs, " +
+                "and performing CRUD operations on stored URLs."
+)
 public class UrlController {
 
     @Autowired

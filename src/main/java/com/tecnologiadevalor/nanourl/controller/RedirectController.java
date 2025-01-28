@@ -18,7 +18,12 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping
-@Tag(name = "Redirect Controller", description = "Module for redirect to original URL.")
+@Tag(
+        name = "Redirect Controller",
+        description = "Controller responsible for handling redirection requests. " +
+                "Provides functionality to redirect users from a shortened URL (shortCode) " +
+                "to its original URL, ensuring validity and expiration checks."
+)
 public class RedirectController {
 
     @Autowired
