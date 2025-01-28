@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '21'
-          distribution: ''
+          distribution: 'adoptopenjdk'
 
       - name: Set up Gradle
         uses: gradle/wrapper-validation-action@v1
