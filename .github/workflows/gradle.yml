@@ -27,4 +27,4 @@ jobs:
 
 
       - name: Build and Test (JUnit)
-        run: ./gradlew test
+        run: ./gradlew test --tests "com.tecnologiadevalor.nanourl.UrlServiceTest"

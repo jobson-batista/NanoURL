@@ -60,6 +60,7 @@ public class UrlService {
 
         do {
             for (int j = 0; j < codeLength; j++) {
+                if(shortCode.length() == 6) break;
                 shortCode.append(characters.charAt(random.nextInt(characters.length())));
             }
         } while(urlRepository.existsByShortCode(shortCode.toString()));

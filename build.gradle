@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.1'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id("com.ryandens.javaagent-test") version "0.5.1"
 }
 
 group = 'com.tecnologiadevalor'
@@ -35,8 +36,20 @@ dependencies {
 	implementation 'org.junit.jupiter:junit-jupiter-api:5.11.0-M2'
 	implementation 'org.junit.vintage:junit-vintage-engine:5.11.0-M2'
 	implementation 'org.springframework.boot:spring-boot-starter-test:3.3.1'
+	testJavaagent 'net.bytebuddy:byte-buddy-agent:1.14.15'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+
+test {
+	jvmArgs += "-XX:+EnableDynamicAgentLoading"
+	jvmArgs += "-Xshare:off"
+	testLogging {
+		events "PASSED", "FAILED", "SKIPPED" // Mostra testes passados, falhados e ignorados
+		exceptionFormat "full"              // Mostra detalhes completos das exceções
+		showStandardStreams = true          // Mostra saída de console dos testes
+	}
 }
