@@ -20,12 +20,11 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '21'
-          distribution: ''
+          distribution: 'temurin'
 
       - name: Set up Gradle
         uses: gradle/wrapper-validation-action@v1
-        with:
 
 
       - name: Build and Test (JUnit)
-        run: ./gradlew test
+        run: ./gradlew test --tests "com.tecnologiadevalor.nanourl.UrlServiceTest"

@@ -20,15 +20,18 @@ public class UrlDto extends BaseEntity {
     private String shortUrl;
     private LocalDateTime expiresAt;
     private int accessCount;
+    private boolean deleted;
 
     public Url toUrl() {
         Url url = new Url();
         url.setOriginalUrl(this.originalUrl);
+        url.setShortUrl(this.shortUrl);
         url.setShortCode(this.shortCode);
         url.setExpiresAt(this.expiresAt);
         url.setAccessCount(this.accessCount);
         url.setUpdatedAt(this.getUpdatedAt());
         url.setCreatedAt(this.getCreatedAt());
+        url.setDeleted(this.isDeleted());
         return url;
     }
 
