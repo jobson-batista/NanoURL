@@ -17,25 +17,28 @@ import java.net.URI;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/io")
-@Tag(name = "Redirect Controller", description = "Module for redirect to original URL.")
+@RequestMapping
+@Tag(
+        name = "Redirect Controller",
+        description = "Controller responsible for handling redirection requests. "
+)
 public class RedirectController {
 
     @Autowired
     private UrlService urlService;
 
     @GetMapping("/{shortCode}")
-    @Operation(summary = "Redirect", description = "Redirects to original URL from shortcode")
+    @Operation(
+            summary = "Redirect to Original URL",
+            description = "Handles requests to redirect a shortened URL (shortCode) to its corresponding original URL. " +
+                    "If the shortened URL is expired, an exception is thrown."
+    )
     public ResponseEntity<?> redirectToOriginalUrl(@PathVariable String shortCode) throws ExpiredUrlException {
         UrlDto originalUrl = urlService.getOriginalUrl(shortCode);
 
-        if(originalUrl != null) {
-            if(originalUrl.getExpiresAt().isBefore(LocalDateTime.now())) {
-                throw new ExpiredUrlException();
-            }
+        if(originalUrl.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new ExpiredUrlException();
         }
-
-        assert originalUrl != null;
 
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(originalUrl.getOriginalUrl())).build();

@@ -2,6 +2,9 @@ package com.tecnologiadevalor.nanourl.service;
 
 import com.tecnologiadevalor.nanourl.dto.UrlDto;
 import com.tecnologiadevalor.nanourl.exception.NotFoundException;
+import com.tecnologiadevalor.nanourl.exception.ShortCodeLengthException;
+import com.tecnologiadevalor.nanourl.exception.TotalAccessCountException;
+import com.tecnologiadevalor.nanourl.model.Statistic;
 import com.tecnologiadevalor.nanourl.model.Url;
 import com.tecnologiadevalor.nanourl.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,7 @@ public class UrlService {
         url.setCreatedAt(LocalDateTime.now());
         url.setUpdatedAt(LocalDateTime.now());
         url.setAccessCount(0);
+        url.setDeleted(false);
         return urlRepository.save(url).toDto();
     }
 
@@ -50,18 +54,22 @@ public class UrlService {
 
     public String generateShortCode() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder shortCode = new StringBuilder();
+        int codeLength = 6;
+        StringBuilder shortCode = new StringBuilder(codeLength);
         Random random = new Random();
 
-        for(int k = 0; k < 6; k++) {
-            shortCode.append(characters.charAt(random.nextInt(characters.length())));
-        }
+        do {
+            for (int j = 0; j < codeLength; j++) {
+                shortCode.append(characters.charAt(random.nextInt(characters.length())));
+            }
+        } while(urlRepository.existsByShortCode(shortCode.toString()));
+
         return shortCode.toString();
     }
 
     public List<UrlDto> getAllUrls() {
         List<UrlDto> dtos = new ArrayList<>();
-        for(Url url: urlRepository.findAll()) {
+        for(Url url: urlRepository.findByDeletedFalse()) {
             dtos.add(url.toDto());
         }
         return dtos;
@@ -70,7 +78,8 @@ public class UrlService {
     public void deleteUrlByShortCode(String shortCode) {
         Optional<Url> url = urlRepository.findByShortCode(shortCode);
         if(url.isEmpty()) throw new NotFoundException(notFoundMessage);
-        this.urlRepository.deleteByShortCode(shortCode);
+        url.get().setDeleted(true);
+        this.urlRepository.save(url.get());
     }
 
     public UrlDto updateUrlByShortCode(Url newUrl, String shortCode) {
@@ -79,9 +88,10 @@ public class UrlService {
         if(newUrl.getOriginalUrl() != null) {
             url.get().setOriginalUrl(newUrl.getOriginalUrl());
         }
-        if(newUrl.getShortCode() != null) {
-            url.get().setShortCode(newUrl.getShortCode());
+        if(newUrl.getShortCode().length() != 6) {
+            throw new ShortCodeLengthException();
         }
+        url.get().setShortCode(newUrl.getShortCode());
         if(newUrl.getShortCode() != null) {
             url.get().setShortUrl(buildShortUrl(newUrl.getShortCode()));
         }
@@ -90,16 +100,37 @@ public class UrlService {
         return urlRepository.save(url.get()).toDto();
     }
 
-    private String buildShortUrl(String shortCode) {
-        return baseUrl + "/io/" + shortCode;
+    public Statistic getStats() {
+        Statistic stats = new Statistic();
+
+        Long quantUrls = urlRepository.count();
+        stats.setTotalShortenedUrls(quantUrls);
+
+        Long quantActiveUrls = urlRepository.countByExpiresAtAfter(LocalDateTime.now());
+        stats.setActiveUrls(quantActiveUrls);
+
+        Long quantExpiredUrls = urlRepository.countByExpiresAtBefore(LocalDateTime.now());
+        stats.setExpiredUrls(quantExpiredUrls);
+
+        stats.setTotalRedirects(totalAccessCount());
+
+        return stats;
     }
 
-    public void incrementAccessCount(String shortCode) {
-        Optional<Url> url = urlRepository.findByShortCode(shortCode);
-        if(url.isPresent()) {
-            url.get().incrementAccessCount();
-            urlRepository.save(url.get());
+    private String buildShortUrl(String shortCode) {
+        return baseUrl + "/" + shortCode;
+    }
+
+    private Long totalAccessCount() {
+        long totalAccess = 0L;
+        try {
+            for(Url u: urlRepository.findAll()) {
+                totalAccess += u.getAccessCount();
+            }
+        } catch (TotalAccessCountException e) {
+            throw new RuntimeException(e);
         }
+        return totalAccess;
     }
 
 }
