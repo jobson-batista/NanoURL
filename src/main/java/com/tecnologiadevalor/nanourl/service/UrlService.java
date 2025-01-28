@@ -2,6 +2,7 @@ package com.tecnologiadevalor.nanourl.service;
 
 import com.tecnologiadevalor.nanourl.dto.UrlDto;
 import com.tecnologiadevalor.nanourl.exception.NotFoundException;
+import com.tecnologiadevalor.nanourl.exception.ShortCodeLengthException;
 import com.tecnologiadevalor.nanourl.model.Url;
 import com.tecnologiadevalor.nanourl.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +51,16 @@ public class UrlService {
 
     public String generateShortCode() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder shortCode = new StringBuilder();
+        int codeLength = 6;
+        StringBuilder shortCode = new StringBuilder(codeLength);
         Random random = new Random();
 
-        for(int k = 0; k < 6; k++) {
-            shortCode.append(characters.charAt(random.nextInt(characters.length())));
-        }
+        do {
+            for (int j = 0; j < codeLength; j++) {
+                shortCode.append(characters.charAt(random.nextInt(characters.length())));
+            }
+        } while(urlRepository.existsByShortCode(shortCode.toString()));
+
         return shortCode.toString();
     }
 
@@ -79,9 +84,10 @@ public class UrlService {
         if(newUrl.getOriginalUrl() != null) {
             url.get().setOriginalUrl(newUrl.getOriginalUrl());
         }
-        if(newUrl.getShortCode() != null) {
-            url.get().setShortCode(newUrl.getShortCode());
+        if(newUrl.getShortCode().length() != 6) {
+            throw new ShortCodeLengthException();
         }
+        url.get().setShortCode(newUrl.getShortCode());
         if(newUrl.getShortCode() != null) {
             url.get().setShortUrl(buildShortUrl(newUrl.getShortCode()));
         }
@@ -91,15 +97,7 @@ public class UrlService {
     }
 
     private String buildShortUrl(String shortCode) {
-        return baseUrl + "/io/" + shortCode;
-    }
-
-    public void incrementAccessCount(String shortCode) {
-        Optional<Url> url = urlRepository.findByShortCode(shortCode);
-        if(url.isPresent()) {
-            url.get().incrementAccessCount();
-            urlRepository.save(url.get());
-        }
+        return baseUrl + "/" + shortCode;
     }
 
 }

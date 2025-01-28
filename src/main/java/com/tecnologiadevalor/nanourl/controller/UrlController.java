@@ -21,32 +21,54 @@ public class UrlController {
     private UrlService urlService;
 
     @PostMapping("/shorten")
-    @Operation(summary = "Shorten", description = "Generate a short code for original URL")
+    @Operation(
+            summary = "Shorten URL",
+            description = "Generates a unique short code for a given original URL. " +
+                    "Accepts the original URL in the request body and returns a shortened URL representation."
+    )
     public ResponseEntity<UrlDto> shortenUrl(@RequestBody Url url) {
         UrlDto newUrl = urlService.createShortUrl(url.getOriginalUrl());
         return ResponseEntity.ok(newUrl);
     }
 
-    @GetMapping("/{shortUrl}")
-    @Operation(summary = "Get Original URL", description = "Generate a short code for original URL")
-    public ResponseEntity<UrlDto> getOriginalUrl(@PathVariable String shortUrl) {
-        UrlDto originalUrl = urlService.getOriginalUrl(shortUrl);
+    @GetMapping("/{shortCode}")
+    @Operation(
+            summary = "Retrieve Original URL",
+            description = "Fetches the original URL corresponding to the provided short code. " +
+                    "Returns the URL details if the short code is valid."
+    )
+    public ResponseEntity<UrlDto> getOriginalUrl(@PathVariable String shortCode) {
+        UrlDto originalUrl = urlService.getOriginalUrl(shortCode);
         return ResponseEntity.ok(originalUrl);
     }
 
     @GetMapping
+    @Operation(
+            summary = "List All URLs",
+            description = "Retrieves all original URLs and their corresponding short codes stored in the database."
+    )
     public ResponseEntity<List<UrlDto>> getAllOriginalUrl() {
         List<UrlDto> urls = urlService.getAllUrls();
         return ResponseEntity.ok(urls);
     }
 
     @DeleteMapping("/{shortCode}")
+    @Operation(
+            summary = "Delete URL",
+            description = "Deletes a shortened URL from the database using the provided short code. " +
+                    "Returns an HTTP 200 status on successful deletion."
+    )
     public ResponseEntity<Void> deleteUrlByShortCode(@PathVariable String shortCode) {
         this.urlService.deleteUrlByShortCode(shortCode);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{shortCode}")
+    @Operation(
+            summary = "Update URL",
+            description = "Updates the original URL associated with a given short code. " +
+                    "Accepts the new URL in the request body and the short code as a path variable."
+    )
     public ResponseEntity<UrlDto> updateUrlByShortCode(@PathVariable String shortCode, @RequestBody Url newUrl) {
         return ResponseEntity.ok(urlService.updateUrlByShortCode(newUrl, shortCode));
     }

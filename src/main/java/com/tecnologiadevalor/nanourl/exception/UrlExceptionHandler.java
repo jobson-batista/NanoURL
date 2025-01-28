@@ -58,4 +58,18 @@ public class UrlExceptionHandler {
         );
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ShortCodeLengthException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<MessageError> shortCodeLengthException(ShortCodeLengthException shortCodeLengthException, WebRequest request) {
+        shortCodeLengthException.printStackTrace();
+        MessageError message = new MessageError(
+                HttpStatus.BAD_REQUEST.value(),
+                this.baseUrl,
+                shortCodeLengthException.getMessage(),
+                shortCodeLengthException.getDescription(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
 }
