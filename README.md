@@ -1,4 +1,4 @@
-# ⚛️ NanoURL | Encurtador de URL ⚛️
+# ⚛️ NanoURL | Encurtador de URL
 
 Este é um projeto simples de encurtamento de URL utilizando **Spring Boot**, **MongoDB** e um pouco de **JUnit**. O objetivo é criar um serviço RESTful que recebe uma URL longa e gera um código curto, armazenando as informações no MongoDB.
 
