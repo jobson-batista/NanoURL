@@ -72,4 +72,18 @@ public class UrlExceptionHandler {
         );
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(TotalAccessCountException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<MessageError> totalAccessCountException(TotalAccessCountException totalAccessCountException, WebRequest request) {
+        totalAccessCountException.printStackTrace();
+        MessageError message = new MessageError(
+                HttpStatus.BAD_REQUEST.value(),
+                this.baseUrl,
+                totalAccessCountException.getMessage(),
+                totalAccessCountException.getDescription(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
 }

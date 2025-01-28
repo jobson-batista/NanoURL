@@ -1,10 +1,15 @@
 package com.tecnologiadevalor.nanourl.controller;
 
 import com.tecnologiadevalor.nanourl.dto.UrlDto;
+import com.tecnologiadevalor.nanourl.model.Statistic;
 import com.tecnologiadevalor.nanourl.model.Url;
 import com.tecnologiadevalor.nanourl.service.UrlService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,5 +81,27 @@ public class UrlController {
     )
     public ResponseEntity<UrlDto> updateUrlByShortCode(@PathVariable String shortCode, @RequestBody Url newUrl) {
         return ResponseEntity.ok(urlService.updateUrlByShortCode(newUrl, shortCode));
+    }
+
+    @GetMapping("/stats")
+    @Operation(
+            summary = "Retrieve URL Statistics",
+            description = "Provides statistical information about the URL shortening service, " +
+                    "such as the total number of URLs, total access count, and other related metrics.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Statistics retrieved successfully.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Statistic.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal server error."
+                    )
+            },
+            tags = {"Statistics"}
+    )
+    public ResponseEntity<Statistic> getStats() {
+        return ResponseEntity.ok(urlService.getStats());
     }
 }

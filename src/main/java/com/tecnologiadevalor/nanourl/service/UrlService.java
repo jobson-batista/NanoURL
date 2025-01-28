@@ -3,6 +3,8 @@ package com.tecnologiadevalor.nanourl.service;
 import com.tecnologiadevalor.nanourl.dto.UrlDto;
 import com.tecnologiadevalor.nanourl.exception.NotFoundException;
 import com.tecnologiadevalor.nanourl.exception.ShortCodeLengthException;
+import com.tecnologiadevalor.nanourl.exception.TotalAccessCountException;
+import com.tecnologiadevalor.nanourl.model.Statistic;
 import com.tecnologiadevalor.nanourl.model.Url;
 import com.tecnologiadevalor.nanourl.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,8 +98,37 @@ public class UrlService {
         return urlRepository.save(url.get()).toDto();
     }
 
+    public Statistic getStats() {
+        Statistic stats = new Statistic();
+
+        Long quantUrls = urlRepository.count();
+        stats.setTotalShortenedUrls(quantUrls);
+
+        Long quantActiveUrls = urlRepository.countByExpiresAtAfter(LocalDateTime.now());
+        stats.setActiveUrls(quantActiveUrls);
+
+        Long quantExpiredUrls = urlRepository.countByExpiresAtBefore(LocalDateTime.now());
+        stats.setExpiredUrls(quantExpiredUrls);
+
+        stats.setTotalRedirects(totalAccessCount());
+
+        return stats;
+    }
+
     private String buildShortUrl(String shortCode) {
         return baseUrl + "/" + shortCode;
+    }
+
+    private Long totalAccessCount() {
+        long totalAccess = 0L;
+        try {
+            for(Url u: urlRepository.findAll()) {
+                totalAccess += u.getAccessCount();
+            }
+        } catch (TotalAccessCountException e) {
+            throw new RuntimeException(e);
+        }
+        return totalAccess;
     }
 
 }
