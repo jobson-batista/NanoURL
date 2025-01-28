@@ -20,9 +20,7 @@ import java.time.LocalDateTime;
 @RequestMapping
 @Tag(
         name = "Redirect Controller",
-        description = "Controller responsible for handling redirection requests. " +
-                "Provides functionality to redirect users from a shortened URL (shortCode) " +
-                "to its original URL, ensuring validity and expiration checks."
+        description = "Controller responsible for handling redirection requests. "
 )
 public class RedirectController {
 
