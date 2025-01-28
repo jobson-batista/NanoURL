@@ -38,6 +38,7 @@ public class UrlService {
         url.setCreatedAt(LocalDateTime.now());
         url.setUpdatedAt(LocalDateTime.now());
         url.setAccessCount(0);
+        url.setDeleted(false);
         return urlRepository.save(url).toDto();
     }
 
@@ -68,7 +69,7 @@ public class UrlService {
 
     public List<UrlDto> getAllUrls() {
         List<UrlDto> dtos = new ArrayList<>();
-        for(Url url: urlRepository.findAll()) {
+        for(Url url: urlRepository.findByDeletedFalse()) {
             dtos.add(url.toDto());
         }
         return dtos;
@@ -77,7 +78,8 @@ public class UrlService {
     public void deleteUrlByShortCode(String shortCode) {
         Optional<Url> url = urlRepository.findByShortCode(shortCode);
         if(url.isEmpty()) throw new NotFoundException(notFoundMessage);
-        this.urlRepository.deleteByShortCode(shortCode);
+        url.get().setDeleted(true);
+        this.urlRepository.save(url.get());
     }
 
     public UrlDto updateUrlByShortCode(Url newUrl, String shortCode) {

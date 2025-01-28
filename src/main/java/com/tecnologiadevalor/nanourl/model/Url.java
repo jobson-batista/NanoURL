@@ -22,6 +22,7 @@ public class Url extends BaseEntity {
     private String shortUrl;
     private LocalDateTime expiresAt;
     private int accessCount;
+    private boolean deleted;
 
     public void incrementAccessCount() {
         this.accessCount++;
