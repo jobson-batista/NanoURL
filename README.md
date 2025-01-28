@@ -56,13 +56,13 @@ Este é um projeto simples de encurtamento de URL utilizando **Spring Boot**, **
      Corpo da requisição (JSON):
      ```json
      {
-       "originalUrl": "https://exemplo.com"
+       "originalUrl": "https://github.com/jobson-batista"
      }
      ```
 
    - **GET** para redirecionar para a URL original:
      ```
-     http://localhost:8080/api/url/{shortCode}
+     http://localhost:8080/{shortCode}
      ```
 
 ## 📚 Documentação | Swagger
