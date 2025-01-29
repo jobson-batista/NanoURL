@@ -1,71 +1,71 @@
-# ⚛️ NanoURL | Encurtador de URL
+# ⚛️ NanoURL | URL Shortener  
 
-Este é um projeto simples de encurtamento de URL utilizando **Spring Boot**, **MongoDB** e um pouco de **JUnit**. O objetivo é criar um serviço RESTful que recebe uma URL longa e gera um código curto, armazenando as informações no MongoDB.
+This is a simple URL shortening project using **Spring Boot**, **MongoDB**, and a bit of **JUnit**. The goal is to create a RESTful service that receives a long URL and generates a short code, storing the information in MongoDB.  
 
-## ✅ Funcionalidades
+## ✅ Features  
 
-- **Encurtar URL**: Recebe uma URL longa e retorna uma URL encurtada.
-- **Redirecionar para URL Original**: Ao acessar a URL encurtada, o serviço redireciona para a URL original.
-- **Obter estastísticas das URLs**: Obtém informação como total de URLs ativas e total de URLs expiradas, por exemplo.
+- **Shorten URL**: Receives a long URL and returns a shortened URL.  
+- **Redirect to Original URL**: When accessing the shortened URL, the service redirects to the original URL.  
+- **Retrieve URL Statistics**: Gets information such as the total number of active and expired URLs, for example.  
 
-## ✅ Tecnologias Utilizadas
+## ✅ Technologies Used  
 
-- **Spring Boot 3.4.1**: Para agilizar a criação do projeto Spring.
-- **MongoDB 8.0.4**: Banco de dados não relacional, baseado em collections e documentos.
-- **Gradle 8.11**: Gerenciador de dependências.
-- **JUnit 5**: Realizar testes automatizados.
-- **Lombok**: Para diminuir a verbosidade do código.
+- **Spring Boot 3.4.1**: To streamline the Spring project development.  
+- **MongoDB 8.0.4**: A non-relational database based on collections and documents.  
+- **Gradle 8.11**: Dependency manager.  
+- **JUnit 5**: For automated testing.  
+- **Lombok**: To reduce code verbosity.  
 
-## 🏃🏻‍♂️ Como Rodar o Projeto
+## 🏃🏻‍♂️ How to Run the Project  
 
-### Pré-requisitos
+### Prerequisites  
 
-- ☕️ Java 21 
-- 🐘 Gradle 
-- 🎲 MongoDB rodando localmente (ou em outro ambiente) 
+- ☕️ Java 21  
+- 🐘 Gradle  
+- 🎲 MongoDB running locally (or in another environment)  
 
-### ✅ Passos
+### ✅ Steps  
 
-1. Clone o repositório:
+1. Clone the repository:  
    ```bash
    git clone https://github.com/jobson-batista/NanoURL.git
-   ```
+   ```  
 
-2. Navegue até o diretório do projeto:
+2. Navigate to the project directory:  
    ```bash
    cd NanoURL
-   ```
+   ```  
 
-3. Configure o MongoDB no arquivo `src/main/resources/application-dev.properties`:
+3. Configure MongoDB in the `src/main/resources/application-dev.properties` file:  
    ```properties
    spring.data.mongodb.host=localhost
    spring.data.mongodb.port=27017
    spring.data.mongodb.database=nano_url
-   ```
+   ```  
 
-4. Execute o projeto:
+4. Run the project:  
    ```bash
    ./gradlew bootRun
-   ```
+   ```  
 
-5. Acesse a aplicação:
-   - **POST** para encurtar uma URL:
+5. Access the application:  
+   - **POST** to shorten a URL:  
      ```
      http://localhost:8080/api/url/shorten
      ```
-     Corpo da requisição (JSON):
+     Request body (JSON):  
      ```json
      {
        "originalUrl": "https://github.com/jobson-batista"
      }
-     ```
+     ```  
 
-   - **GET** para redirecionar para a URL original:
+   - **GET** to redirect to the original URL:  
      ```
      http://localhost:8080/{shortCode}
-     ```
+     ```  
 
-## 📚 Documentação | Swagger
+## 📚 Documentation | Swagger  
 
-* Para acessar a documentação basta subir o projeto e acessar o endereço abaixo:
-```http://localhost:8080/swagger-ui/index.html```
+* To access the documentation, simply start the project and visit the URL below:  
+```http://localhost:8080/swagger-ui/index.html```  
